@@ -1,4 +1,5 @@
-import { OperationResult } from './OperationResult';
+import {OperationResult} from './OperationResult';
+import {DError} from "./DError";
 
 
 /**
@@ -16,7 +17,7 @@ export class AResponse<T, E = Error> extends OperationResult<T, E> {
     /**
      * Returns the designed error code for this error handler.
      */
-    public getErrorCode() : number {
+    public getErrorCode(): number {
         return this.code;
     }
 
@@ -60,7 +61,7 @@ export class AResponse<T, E = Error> extends OperationResult<T, E> {
      * @param code HTTP Response Code
      */
     public static failWithMessage<U>(error: string, code?: number): AResponse<U> {
-        return new AResponse<U>(null, new Error(error), code);
+        return new AResponse<U>(null, new DError(error), code);
     }
 
 }

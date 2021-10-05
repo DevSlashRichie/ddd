@@ -1,6 +1,7 @@
 import { OperationResult } from './OperationResult';
-import { StatusBuilder, StatusObject } from '@grpc/grpc-js';
+import {Metadata, StatusBuilder, StatusObject} from '@grpc/grpc-js';
 import { Status } from '@grpc/grpc-js/build/src/constants';
+import {DError} from "./DError";
 
 /**
  * This represents a response in a way formatted for GRPC.
@@ -43,17 +44,41 @@ export class GResponse<T, E = Partial<StatusObject>> extends OperationResult<T, 
   }
 
   /**
+   * Will build a failed response with a GRPC error.
+   * @param error The error
+   */
+  public static failWithDError<U>(error: DError): GResponse<U> {
+
+    const metadata = new Metadata();
+    metadata.set('internalCode', error.internalCode.toString());
+
+    const err = new StatusBuilder()
+        .withCode(error.networkError)
+        .withDetails(error.message)
+        .withMetadata(metadata)
+        .build();
+
+    return new GResponse<U>(null, err);
+  }
+
+  /**
    * Build a failed response based on a message and a premeditated status.
    * @param error The error message.
    * @param status The status for this error.
+   * @param internalCode Any code you want to use for this error.
    */
-  public static failWithMessage<U>(error: string, status: Status): GResponse<U> {
-    const err = new StatusBuilder()
-    .withCode(status)
-    .withDetails(error)
-    .build();
+  public static failWithMessage<U>(error: string, status: Status, internalCode = 0): GResponse<U> {
+    const metadata = new Metadata();
 
-    return new GResponse<U>(null, err);
+    metadata.set('internalCode', internalCode.toString());
+
+    const err = new StatusBuilder()
+        .withCode(status)
+        .withDetails(error)
+        .withMetadata(metadata)
+        .build();
+
+        return new GResponse<U>(null, err);
   }
 
 }
