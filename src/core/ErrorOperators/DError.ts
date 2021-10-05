@@ -26,7 +26,7 @@ export class DError extends Error {
                 internalCode = Number(buff);
         }
 
-       return new DError(error.details, error.code, internalCode);
+       return new DError(error.details, internalCode, error.code);
     }
 
     public static isDError(err: Error) {

@@ -49,7 +49,7 @@ export class AResponse<T, E = Error> extends OperationResult<T, E> {
      * @param networkCode
      */
     public static failWithMessage<U>(error: string, internalCode?: number, networkCode?: number): AResponse<U> {
-        return new AResponse<U>(null, new DError(error, networkCode, internalCode));
+        return new AResponse<U>(null, new DError(error, internalCode, networkCode));
     }
 
 }
