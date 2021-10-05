@@ -8,3 +8,4 @@ export * from './ErrorOperators/OperationResult';
 export * from './ErrorOperators/AResponse';
 export * from './ErrorOperators/GResponse';
 export * from './ErrorOperators/Result';
+export * from './ErrorOperators/DError';
