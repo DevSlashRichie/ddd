@@ -9,7 +9,7 @@ export class DError extends Error {
 
     public readonly internalCode;
 
-    constructor(message = 'Message not provided', httpCode = 500, internalCode = 0) {
+    constructor(message = 'Message not provided', internalCode = 0, httpCode = 500) {
         super(message);
 
         this.networkError = httpCode;
@@ -35,6 +35,13 @@ export class DError extends Error {
 
     public static isErrorCanBeDError(err: StatusObject | Partial<StatusObject>) {
         return err && err.metadata && err.metadata.get('internalCode');
+    }
+
+    public static fromError(error: Error, internalError?: number, networkError?: number) {
+        if (this.isDError(error))
+            return error;
+
+        return new DError(error.message, networkError, internalError);
     }
 
 }
