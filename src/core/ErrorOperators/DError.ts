@@ -41,7 +41,7 @@ export class DError extends Error {
         if (this.isDError(error))
             return error;
 
-        return new DError(error.message, networkError, internalError);
+        return new DError(error.message, internalError, networkError);
     }
 
 }
