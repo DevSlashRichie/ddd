@@ -1,6 +1,7 @@
 import { OperationResult } from './OperationResult';
 import { StatusObject } from '@grpc/grpc-js';
 import { Status } from '@grpc/grpc-js/build/src/constants';
+import { DError } from "./DError";
 /**
  * This represents a response in a way formatted for GRPC.
  */
@@ -26,9 +27,15 @@ export declare class GResponse<T, E = Partial<StatusObject>> extends OperationRe
      */
     static failAny<U>(error: any): GResponse<U>;
     /**
+     * Will build a failed response with a GRPC error.
+     * @param error The error
+     */
+    static failWithDError<U>(error: DError): GResponse<U>;
+    /**
      * Build a failed response based on a message and a premeditated status.
      * @param error The error message.
      * @param status The status for this error.
+     * @param internalCode Any code you want to use for this error.
      */
-    static failWithMessage<U>(error: string, status: Status): GResponse<U>;
+    static failWithMessage<U>(error: string, status: Status, internalCode?: number): GResponse<U>;
 }
