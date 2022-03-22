@@ -6,11 +6,16 @@
   "scripts": {
     "build": "tsc --project ."
   },
-  "author": "Ricardo Rodriguez Medina",
+  "author": {
+    "name": "Ricardo Rodriguez Medina",
+    "email": "romr020606@gmail.com"
+  },
   "license": "private",
   "types": "lib/index.d.ts",
+  "repository": "RicardormDev/ddd",
   "files": [
-    "lib/**/*",
+    "lib",
+    "src",
     "README.md",
     "package.json",
     "docs/**/*"
