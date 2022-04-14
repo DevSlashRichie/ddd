@@ -1,6 +1,6 @@
 {
   "name": "ddd-scaffold",
-  "version": "1.4.3",
+  "version": "1.4.8",
   "description": "All things you'll need to setup a DDD project.",
   "main": "lib/index.js",
   "scripts": {
