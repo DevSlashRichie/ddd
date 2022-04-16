@@ -1,4 +1,4 @@
-import {Result} from '../core/ErrorOperators/Result';
+import { Result } from '../core/ErrorOperators/Result';
 
 /**
  * Class helper to catch errors at parameters or validation.
@@ -25,12 +25,22 @@ export class Guard {
     public static preventMultipleNullOrUndefined(values: Array<Array<any | string>>): Result<void> {
 
         for (const value of values) {
-            const [parameter, parameterName] = value;
+            const [ parameter, parameterName ] = value;
             if (parameter === null || parameter === undefined)
                 return Result.fail(`${parameterName} is null or undefined.`);
         }
 
         return Result.accept(null);
+    }
+
+    /**
+     * Same as {@link preventMultipleNullOrUndefined} but is applied to a whole object.
+     * You'll need to pass a complete object.
+     * @param object
+     */
+    public static preventNullOrUndefinedFromObject(object: Record<any, any>): Result<void> {
+        const fields = Object.entries(object);
+        return this.preventMultipleNullOrUndefined(fields);
     }
 
     /**
