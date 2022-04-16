@@ -1,4 +1,4 @@
-import { ObjectId } from "bson";
+import { ObjectId } from 'bson';
 
 /**
  * This represents the identifier for an Entity.
@@ -16,13 +16,13 @@ export class EntityId extends ObjectId {
         if(id && !ObjectId.isValid(id))
             throw new Error('Invalid ObjectID given.');
 
-        if (typeof id === "string")
+        if (typeof id === 'string')
             id = new ObjectId(id);
         super(id ? id : new ObjectId());
     }
 
     eq(id: EntityId | string): boolean {
-        if(typeof id === "string")
+        if(typeof id === 'string')
             id = new EntityId(id);
 
         if(id === this)

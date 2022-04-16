@@ -17,6 +17,6 @@ export abstract class ValueObject<T extends ValueObjectPropsSchema> {
     }
 
     get raw () {
-      return this.props;
+        return this.props;
     }
 }

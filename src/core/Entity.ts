@@ -1,4 +1,4 @@
-import { EntityId } from "./values/EntityId";
+import { EntityId } from './values/EntityId';
 
 /**
  * This class is used to build an Entity inside the business core.

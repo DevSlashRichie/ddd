@@ -1,4 +1,5 @@
-import { OperationResult } from "../core/ErrorOperators/OperationResult";
+import { OperationResult } from '../core/ErrorOperators/OperationResult';
+import {GBuilder} from '../utilities';
 
 /**
  * This action is used to build an DDD action. It includes all the the element required to build it.
@@ -18,4 +19,18 @@ export interface Action<T, R extends OperationResult<any, any>> {
      * @return returns an OperationResult handling what happened with this action.
      */
     execute(dto: T) : Promise<R>;
+}
+
+export abstract class SessionAction<T, R extends OperationResult<any, any>> implements Action<T, R> {
+
+    protected abstract _execute(g: GBuilder, dto: T) : Promise<R>;
+
+    async execute(dto: T): Promise<R> {
+        const gbuilder = GBuilder.create(false);
+        const operation = await this._execute(gbuilder, dto);
+        if(!operation.isSuccess())
+            await gbuilder.recover(true);
+        return operation;
+    }
+
 }

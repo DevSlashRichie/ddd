@@ -1,4 +1,4 @@
-import {StatusObject} from "@grpc/grpc-js";
+import {StatusObject} from '@grpc/grpc-js';
 
 export class DError extends Error {
 
@@ -17,16 +17,16 @@ export class DError extends Error {
     }
 
     public static buildFromGRPC(error: StatusObject | Partial<StatusObject>) {
-        let _internalCode = error.metadata?.get('internalCode');
+        const _internalCode = error.metadata?.get('internalCode');
 
-        let internalCode: number = 0;
+        let internalCode = 0;
         if (_internalCode && _internalCode.length > 0) {
             const buff = _internalCode[0];
             if (!Number.isNaN(buff))
                 internalCode = Number(buff);
         }
 
-       return new DError(error.details, internalCode, error.code);
+        return new DError(error.details, internalCode, error.code);
     }
 
     public static isDError(err: Error) {

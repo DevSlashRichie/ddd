@@ -1,4 +1,4 @@
-import {Result} from "../core/ErrorOperators/Result";
+import {Result} from '../core/ErrorOperators/Result';
 
 /**
  * Class helper to catch errors at parameters or validation.
@@ -24,7 +24,7 @@ export class Guard {
      */
     public static preventMultipleNullOrUndefined(values: Array<Array<any | string>>): Result<void> {
 
-        for (let value of values) {
+        for (const value of values) {
             const [parameter, parameterName] = value;
             if (parameter === null || parameter === undefined)
                 return Result.fail(`${parameterName} is null or undefined.`);
@@ -42,8 +42,8 @@ export class Guard {
     public static appendErrorMessage(url: string, message: string) {
         const match = url.match(/(error=)(\w*)/);
         if (!match || match.length === 0)
-            return url + "&error=" + message;
-        return url.replace(/(error=)(\w*)/, "$1" + message);
+            return url + '&error=' + message;
+        return url.replace(/(error=)(\w*)/, '$1' + message);
     }
 
 }

@@ -1,5 +1,5 @@
 import {OperationResult} from './OperationResult';
-import {DError} from "./DError";
+import {DError} from './DError';
 
 
 /**

@@ -38,7 +38,7 @@ export abstract class OperationResult<T, E> {
      */
     public getValue() : T {
         if (this.value === null)
-            throw new Error("This wasn't a successful result, you can't use this method.");
+            throw new Error('This wasn\'t a successful result, you can\'t use this method.');
         return this.value;
     }
 
@@ -51,7 +51,7 @@ export abstract class OperationResult<T, E> {
      */
     public getError() : E {
         if (this.error === null)
-            throw new Error("This was a successful result, you can't use this method.");
+            throw new Error('This was a successful result, you can\'t use this method.');
         return this.error;
     }
 

@@ -1,6 +1,6 @@
 import {ClientUnaryCall, ServiceError} from '@grpc/grpc-js';
 import {Message as Msg} from 'google-protobuf';
-import {GResponse} from 'ddd-scaffold';
+import { GResponse } from '..';
 
 type EndpointResponse<R extends Msg> = (error: ServiceError | null, response: R) => void;
 type EndpointCall<R extends Msg> = (res: EndpointResponse<R>) => ClientUnaryCall;
@@ -33,19 +33,22 @@ export class GUtils {
 
 export class GBuilder {
 
-    private readonly recovers: Array<EndpointCall<any>>;
+    private readonly autoRecover: boolean;
+    private readonly recovers: Array<() => Promise<void> | PromiseLike<void> | void>;
 
-    private constructor() {
+    protected constructor(autoRecover: boolean) {
         this.recovers = [];
+        this.autoRecover = autoRecover;
     }
 
-    public async execute<R extends Msg, T extends Msg>(origin: EndpointCall<R>, recover?: EndpointCall<T>, autoRecover = true) {
+    public async execute<R extends Msg, T extends Msg>(origin: EndpointCall<R>, recover?: EndpointCall<T>) {
         if(recover)
-            this.recovers.push(recover);
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            this.recovers.push(async () => { await recover(() => {}); });
 
         const op = await GUtils.extract<R>(origin);
 
-        if (!op.isSuccess() && autoRecover)
+        if (!op.isSuccess() && this.autoRecover)
             await this.recover(!recover);
 
         return op;
@@ -60,22 +63,27 @@ export class GBuilder {
             origin: op,
             recover: (func: (res: A) => EndpointCall<B>) => {
                 if (op.isSuccess())
-                    this.recovers.push(func(op.getValue()));
+                    this.recovers.push(async () => { await func(op.getValue()); });
                 return op;
-            }
-        }
+            },
+        };
+    }
+
+    public addPlainRecover(recover: () => Promise<void> | PromiseLike<void> | void) {
+        this.recovers.push(recover);
+        return this;
     }
 
     public async recover(includeLast = false) {
         const recoveries = includeLast ? this.recovers : this.recovers.slice(0, this.recovers.length - 1);
-        recoveries.forEach(pair => {
-            pair(() => {});
-        });
+        for await (const func of recoveries) {
+            await func();
+        }
         return this;
     }
 
-    public static create() {
-        return new GBuilder();
+    public static create(autoRecover = true) {
+        return new GBuilder(autoRecover);
     }
 
 }

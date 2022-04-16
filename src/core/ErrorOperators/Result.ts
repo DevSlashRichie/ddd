@@ -1,4 +1,4 @@
-import { OperationResult } from "./OperationResult";
+import { OperationResult } from './OperationResult';
 
 /**
  * Represents a waited error but in a more generic way because it returns a string error.
