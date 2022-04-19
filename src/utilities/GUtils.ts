@@ -1,5 +1,5 @@
-import {ClientUnaryCall, ServiceError} from '@grpc/grpc-js';
-import {Message as Msg} from 'google-protobuf';
+import { ClientUnaryCall, ServiceError } from '@grpc/grpc-js';
+import { Message as Msg } from 'google-protobuf';
 import { GResponse } from '..';
 
 type EndpointResponse<R extends Msg> = (error: ServiceError | null, response: R) => void;
@@ -41,10 +41,12 @@ export class GBuilder {
         this.autoRecover = autoRecover;
     }
 
-    public async execute<R extends Msg, T extends Msg>(origin: EndpointCall<R>, recover?: EndpointCall<T>) {
+    public async execute<R extends Msg, T extends Msg = never>(origin: EndpointCall<R>, recover?: EndpointCall<T>) {
         if(recover)
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            this.recovers.push(async () => { await recover(() => {}); });
+            this.recovers.push(async () => {
+                await recover(() => {}); 
+            });
 
         const op = await GUtils.extract<R>(origin);
 
@@ -54,16 +56,20 @@ export class GBuilder {
         return op;
     }
 
-    public async chain<A extends Msg, B extends Msg>(origin: EndpointCall<A>) {
+    public async chain<A extends Msg, B extends Msg = never>(origin: EndpointCall<A>) {
         const op = await GUtils.extract(origin);
         if (!op.isSuccess())
             await this.recover();
 
         return {
             origin: op,
-            recover: (func: (res: A) => EndpointCall<B>) => {
-                if (op.isSuccess())
-                    this.recovers.push(async () => { await func(op.getValue()); });
+            recover: (func: (origin: A, res: EndpointResponse<B>) => ClientUnaryCall) => {
+                if (op.isSuccess()) {
+                    this.recovers.push(async () => {
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        await func(op.getValue(), () => {});
+                    });
+                }
                 return op;
             },
         };
