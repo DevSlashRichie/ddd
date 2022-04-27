@@ -1,5 +1,5 @@
 import { Entity } from './Entity';
-import { IDomainEvent } from './events';
+import { DomainEvents, IDomainEvent } from './events';
 import { Logger } from '../logger';
 
 export class AggregateRoot<T> extends Entity<T> {
@@ -11,6 +11,7 @@ export class AggregateRoot<T> extends Entity<T> {
 
     protected addDomainEvent(domainEvent: IDomainEvent): void {
         this._domainEvents.push(domainEvent);
+        DomainEvents.markAggregateForDispatch(this);
         this.logEvent(domainEvent);
     }
 

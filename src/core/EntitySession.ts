@@ -89,7 +89,7 @@ export class EntitySession<T extends Record<any, any>> {
                 else
                     acc -= change.value;
                 return acc;
-            }, this._initialState[key] as number);
+            }, 0);
 
             return acc;
         }, {} as { [key: string]: number });
