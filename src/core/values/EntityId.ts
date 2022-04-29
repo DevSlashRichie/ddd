@@ -1,5 +1,5 @@
 import { ObjectId } from 'bson';
-import { Result } from '../../../lib';
+import { Result } from '../ErrorOperators/Result';
 
 /**
  * This represents the identifier for an Entity.

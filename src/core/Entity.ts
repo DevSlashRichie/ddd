@@ -21,4 +21,13 @@ export abstract class Entity<T> {
         return this._id;
     }
 
+    public clone<R extends Entity<T>>() : R {
+        const reflect = Reflect.getPrototypeOf(this);
+
+        if(!reflect)
+            throw new Error('Entity is not a class');
+
+        return new (reflect.constructor as { new(props: T, id?: EntityId): R })({ ...this.props }, new EntityId(this._id, true));
+    }
+
 }

@@ -104,3 +104,33 @@ export class EntitySession<T extends Record<any, any>> {
     }
 
 }
+
+export class SimpleEntitySession<T extends Entity<any>> {
+
+    private original: T;
+    private copy: T;
+
+    constructor(private _entity: T) {
+        this.original = _entity;
+        this.copy = _entity.clone();
+    }
+    
+    diff() {
+        const props: { [key: string]: any } = {};
+        
+        for(const key in this.original.props) {
+            if(this.original.props[key] !== this.copy.props[key])
+                props[key] = this.copy.props[key];
+        }
+        
+    }
+
+    public static from<T extends Entity<T>>(entity: T) : { session: SimpleEntitySession<T>, entity: T } {
+        const sess = new SimpleEntitySession<T>(entity);
+        
+        return {
+            session: sess,
+            entity: sess.copy
+        };
+    }
+}
