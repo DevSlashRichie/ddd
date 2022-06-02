@@ -56,6 +56,20 @@ export class DomainEvents {
         }
     }
 
+    public static dispatchSingleEvent(filter: (aggregateRoot: AggregateRoot<any>) => boolean, eventFilter: (event: IDomainEvent) => boolean) {
+        const aggregate = this.markedAggregates.find(filter);
+        if (aggregate) {
+            const event = aggregate.domainEvents.find(eventFilter);
+            if (event) {
+                this.dispatch(event);
+                // RemoveEvent
+                aggregate.domainEvents.splice(aggregate.domainEvents.indexOf(event), 1);
+                if(aggregate.domainEvents.length === 0)
+                    this.removeAggregateFromMarkedDispatchList(aggregate);
+            }
+        }
+    }
+
     public static register(callback: EventHandler, eventClassName: string) {
         // eslint-disable-next-line no-prototype-builtins
         if (!this.handlersMap.hasOwnProperty(eventClassName))

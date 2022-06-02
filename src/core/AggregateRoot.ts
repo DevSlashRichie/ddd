@@ -18,7 +18,7 @@ export class AggregateRoot<T> extends Entity<T> {
     private logEvent(domainEvent: IDomainEvent): void {
         const thiz = Reflect.getPrototypeOf(this);
         const domainEventClazz = Reflect.getPrototypeOf(domainEvent);
-        Logger.info('[Domain Event Created]: ' + thiz?.constructor.name + '==>' + domainEventClazz?.constructor.name);
+        Logger.info('[Domain Event Created]: ' + thiz?.constructor.name + ' ==> ' + domainEventClazz?.constructor.name);
     }
 
     public clearEvents(): void {

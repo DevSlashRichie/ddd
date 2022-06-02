@@ -9,7 +9,7 @@ export abstract class Entity<T> {
     public readonly props: T;
 
     protected constructor(props: T, id?: EntityId) {
-        this._id = id ? id : new EntityId();
+        this._id = id ? new EntityId(id, true) : new EntityId();
         this.props = props;
     }
 

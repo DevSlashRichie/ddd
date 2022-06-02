@@ -1,11 +1,31 @@
-import { EntityId, EntitySession } from '../index';
+import { Entity, EntityId, EntitySession } from '../index';
 
+export interface ComplexEventProps {
+    aggregate: Entity<any>;
+    dateTimeOccurred: Date;
+    version?: number;
+}
 
 export interface IDomainEvent {
 
     dateTimeOccurred: Date;
 
     getAggregateId(): EntityId;
+
+}
+
+
+export abstract class ComplexEvent<T extends ComplexEventProps> extends Entity<T> implements IDomainEvent {
+
+    public readonly dateTimeOccurred: Date = new Date();
+
+    protected constructor(props: T, id?: EntityId) {
+        super(props, id);
+    }
+
+    public getAggregateId(): EntityId {
+        return this.props.aggregate.getId();
+    }
 
 }
 

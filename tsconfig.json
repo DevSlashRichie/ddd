@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "Node",
     "declaration": true,
     "outDir": "lib",
     "esModuleInterop": true,
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "files": [
     "src/index.ts"
